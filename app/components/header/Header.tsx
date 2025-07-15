@@ -11,33 +11,33 @@ const Header = () => {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
           <Link href={"/"}>
-            <h1 className="text-2x1 font-semibold tracking-wider text-primary">
+            <h1 className="text-2x1 font-semibold tracking-wider text-primary text-shadow-lg">
               SAPHIRUS
             </h1>
           </Link>
         </div>
         <nav className="hidden md:flex space-x-8">
           <a
-            href="#"
-            className="text-gray-600 hover:text-primary transition-colors"
+            href="#home"
+            className="text-gray-600 hover:text-primary transition-colors text-shadow-sm"
           >
             Inicio
           </a>
           <a
             href="#destacados"
-            className="text-gray-600 hover:text-primary transition-colors"
+            className="text-gray-600 hover:text-primary transition-colors text-shadow-sm"
           >
             Destacados
           </a>
           <a
             href="#productos"
-            className="text-gray-600 hover:text-primary transition-colors"
+            className="text-gray-600 hover:text-primary transition-colors text-shadow-sm"
           >
             Productos
           </a>
           <a
             href="#nosotros"
-            className="text-gray-600 hover:text-primary transition-colors"
+            className="text-gray-600 hover:text-primary transition-colors text-shadow-sm"
           >
             Sobre nosotros
           </a>

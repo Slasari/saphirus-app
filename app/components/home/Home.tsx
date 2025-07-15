@@ -6,14 +6,14 @@ import { Button } from "../Button";
 const Home = () => {
   return (
     <section
-      id="#"
+      id="home"
       className="pt-24 pb-16 md:pt-32 md:pb-24 px-6 md:px-12 bg-gradient-to-br from-white to-blue-50"
     >
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6 md:pr-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight text-gray-900">
             Las mejores{" "}
-            <span className="font-semibold text-primary">fragancias</span> al
+            <span className="font-semibold text-primary text-shadow-sm">fragancias</span> al
             mejor precio
           </h1>
           <p className="text-lg text-gray-600 max-w-lg">
