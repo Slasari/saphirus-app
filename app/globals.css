@@ -4,3 +4,7 @@
   --color-primary: #009faf;
   --color-primaryHover: #067681
 }
+
+html {
+  scroll-behavior: smooth;
+}

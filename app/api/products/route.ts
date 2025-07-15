@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
     if (!supabase || tokenError) {
       return NextResponse.json({ message: "No autorizado" }, { status: 401 });
     }
-    console.log(body);
     const { data, error } = await supabase
       .from("products")
       .insert(body)

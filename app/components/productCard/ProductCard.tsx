@@ -14,7 +14,7 @@ const ProductCard = () => {
                   }).format(5100)}</p>
             <p>Floral</p>
         </div>
-        <div className='flex justify-center'>
+        <div className='flex justify-center mb-5'>
             <Button>Consultar</Button>
         </div>
             
