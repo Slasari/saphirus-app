@@ -2,7 +2,8 @@
 
 @theme {
   --color-primary: #009faf;
-  --color-primaryHover: #067681
+  --color-primaryHover: #067681;
+  --color-secondary: #FFC067
 }
 
 html {

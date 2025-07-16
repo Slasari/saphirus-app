@@ -15,7 +15,7 @@ const ProductCard = () => {
             <p>Floral</p>
         </div>
         <div className='flex justify-center mb-5'>
-            <Button>Consultar</Button>
+            <Button variant='tertiary'>Consultar</Button>
         </div>
             
     </div>

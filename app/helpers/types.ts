@@ -12,3 +12,10 @@ export type Product = {
   created_at: string;
   deleted: boolean;
 };
+
+export type FamilyGroup = {
+  id: string;
+  name: string;
+  icon: string;
+  total_products: number
+}
