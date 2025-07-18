@@ -6,7 +6,7 @@ export async function getsupabaseservice (request: NextRequest, from: string, me
     const {searchParams} = request.nextUrl
     console.log(searchParams)
     const family = searchParams.get("family")
-    let query = supabaseService.from(from).select("*, fragance(name, id)")
+    let query = supabaseService.from(from).select("*, fragrance(name, id)")
 
     if(family){
       query = query.eq("family", family);

@@ -4,4 +4,4 @@ export const URL_PRODUCTS = URL_API + 'products'
 
 export const URL_FAMILY = URL_API + 'familygroup'
 
-export const URL_FRAGANCE = URL_API + ''
+export const URL_FRAGRANCE = URL_API + 'fragrance'

@@ -7,7 +7,7 @@ export type Product = {
   net_content: string;
   type: string;
   family: string;
-  fragance: string;
+  fragrance: Fragrance;
   usage: string;
   image: string[];
   created_at: string;
@@ -21,7 +21,7 @@ export type FamilyGroup = {
   total_products: number
 }
 
-export type Fragance = {
+export type Fragrance = {
   id: string;
   name: string;
 }
