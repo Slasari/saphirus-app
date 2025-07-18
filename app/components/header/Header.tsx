@@ -6,6 +6,7 @@ import { MenuIcon,XIcon } from "lucide-react";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   return (
     <header className="w-full bg-white py-4 px-6 md:px-12 fixed top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -42,7 +43,7 @@ const Header = () => {
             Sobre nosotros
           </a>
         </nav>
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center space-x-4" >
           <Button>Contacto</Button>
         </div>
         <button className="md:hidden"

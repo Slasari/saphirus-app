@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { URL_PRODUCTS, URL_FAMILY } from "@/app/helpers/variables/variables";
+import { URL_PRODUCTS, URL_FAMILY, URL_FRAGANCE } from "@/app/helpers/variables/variables";
 import ProductCard from "../productCard/ProductCard";
-import { Product, FamilyGroup } from "@/app/helpers/types";
+import { Product, FamilyGroup, Fragance } from "@/app/helpers/types";
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -11,21 +11,45 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [familyGroup, setFamilyGroup] = useState([]);
   const [familyGroupSelected, setFamilyGroupSelected] = useState("");
+  const [fragance, setFragance] = useState([]);
+  const [fraganceSelected, setFraganceSelected] = useState("");
 
   useEffect(() => {
-    fetch(URL_PRODUCTS, { cache: "no-cache" }).then((r) =>
+    fetch(`${URL_PRODUCTS}?family=${familyGroupSelected}`, { cache: "no-cache" }).then((r) =>
       r.json().then((response) => setProducts(response.data))
     );
+  }, [familyGroupSelected]);
+  
+  useEffect(() => {
     fetch(URL_FAMILY, { cache: "no-cache" }).then((r) =>
       r.json().then((response) => setFamilyGroup(response.data))
     );
-  }, [familyGroupSelected]);
+  }, [])
+
+  useEffect(() => {
+    fetch(URL_FRAGANCE, { cache: "no-cache" }).then((r) =>
+      r.json().then((response) => setFragance(response.data))
+    );
+  }, [])
+
+  useEffect(() => {
+    fetch(URL_FAMILY, { cache: "no-cache" }).then((r) =>
+      r.json().then((response) => setFamilyGroup(response.data))
+    );
+  }, [])
 
   const handleFamily = (family: string) => {
     if(familyGroupSelected){
         return setFamilyGroupSelected('')
     }
     setFamilyGroupSelected(family)
+  }
+
+  const handleFragance = (fragance: string) => {
+    if(fraganceSelected){
+      return setFraganceSelected('')
+    }
+    setFraganceSelected(fragance)
   }
 
   const validateFamilyGroup = (family: FamilyGroup) => {
@@ -62,7 +86,7 @@ const ProductList = () => {
               </h2>
               <div className="flex gap-3 flex-col py-3">
                 {familyGroup.map((f: FamilyGroup) => (
-                  validateFamilyGroup(f) && 
+                   validateFamilyGroup(f) &&
                   <button
                     key={f.id}
                     className="flex justify-between items-center cursor-pointer group"
@@ -99,6 +123,12 @@ const ProductList = () => {
               <h2 className="font-semibold text-shadow-sm text-lg">
                 Fragancia
               </h2>
+              {
+                [...new Set(products.map((f: Product) => (
+                  <span key={f.id}>{f.fragance.name}</span>
+                )))
+              ]
+              }
             </section>
             <hr className="text-gray-300"></hr>
             <section>

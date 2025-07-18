@@ -1,37 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import supabaseService from "@/app/lib/supabasewithouttoken";
 import { supabaseFromToken } from "@/app/lib/supabasefromtoken";
+import { getsupabaseservice } from "../helpers/getsupabaseservice";
 
-export async function GET() {
-  try {
-    const { data, error } = await supabaseService.from("products").select("*");
+export async function GET(request: NextRequest) {
+  const {data, message, error, status} = await getsupabaseservice(request, "products", "al conseguir los productos")
 
-    if (error) {
-      return new Response(
-        JSON.stringify({
-          error,
-          message: "Error al conseguir los productos",
-        }),
-        { status: 400 }
-      );
-    }
-    return new Response(
-      JSON.stringify({
-        data,
-        message: "Exito al conseguir los productos",
-      }),
-      { status: 200 }
-    );
-  } catch (err) {
-    console.log(err);
-    return NextResponse.json(
-      {
-        err,
-        message: "Error de servidor",
-      },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json({
+    data, message, error
+  },{status})
 }
 
 export async function POST(req: NextRequest) {
