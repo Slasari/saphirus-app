@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import supabaseService from "@/app/lib/supabasewithouttoken";
+import { Fragrance } from "@/app/helpers/types";
 
 export async function GET (request: NextRequest) {
   try{
@@ -17,8 +18,9 @@ export async function GET (request: NextRequest) {
     }, {status: 500})
     }
     const fragrance = data.map((e) => e.fragrance)
+    const fragranceForSelect = fragrance.map((e: Fragrance) => ({value: e.id, label: e.name}))
     return NextResponse.json({
-      data: fragrance, message: "Exito al conseguir las fragancias"
+      data: fragrance, message: "Exito al conseguir las fragancias", fragranceForSelect
     }, {status: 200})
   }
   catch(err){

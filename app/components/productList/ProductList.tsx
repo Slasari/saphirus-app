@@ -3,9 +3,11 @@
 import React from "react";
 import { URL_PRODUCTS, URL_FAMILY, URL_FRAGRANCE } from "@/app/helpers/variables/variables";
 import ProductCard from "../productCard/ProductCard";
-import { Product, FamilyGroup, Fragrance } from "@/app/helpers/types";
+import { Product, FamilyGroup, Fragrance, FragranceForSelect } from "@/app/helpers/types";
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
+import Select from "react-select/base";
+import CustomSelect from "./CustomSelect";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -15,10 +17,10 @@ const ProductList = () => {
   const [fragranceSelected, setFragranceSelected] = useState("");
 
   useEffect(() => {
-    fetch(`${URL_PRODUCTS}?family=${familyGroupSelected}`, { cache: "no-cache" }).then((r) =>
+    fetch(`${URL_PRODUCTS}?family=${familyGroupSelected}&fragrance=${fragranceSelected}`, { cache: "no-cache" }).then((r) =>
       r.json().then((response) => setProducts(response.data))
     );
-  }, [familyGroupSelected]);
+  }, [familyGroupSelected, fragranceSelected]);
   
   useEffect(() => {
     fetch(URL_FAMILY, { cache: "no-cache" }).then((r) =>
@@ -29,25 +31,18 @@ const ProductList = () => {
   useEffect(() => {
     fetch(`${URL_FRAGRANCE}?family=${familyGroupSelected}`, { cache: "no-cache" }).then((r) =>
       r.json().then((response) => {
-        const fragranceList = response.data.filter(
-  (item: Product, index: number, self: Product[]) =>
+        const fragranceList = response.fragranceForSelect.filter(
+  (item: FragranceForSelect, index: number, self: FragranceForSelect[]) =>
     index === self.findIndex(
       (t) =>
-        t.id === item.id &&
-        t.name === item.name
+        t.value === item.value &&
+        t.label === item.label
     )
 );
-console.log(fragranceList)
 setFragrance(fragranceList)
       })
     );
   }, [familyGroupSelected])
-
-  useEffect(() => {
-    fetch(URL_FAMILY, { cache: "no-cache" }).then((r) =>
-      r.json().then((response) => setFamilyGroup(response.data))
-    );
-  }, [])
 
   const handleFamily = (family: string) => {
     if(familyGroupSelected){
@@ -56,11 +51,8 @@ setFragrance(fragranceList)
     setFamilyGroupSelected(family)
   }
 
-  const handleFragrance = (fragrance: string) => {
-    if(fragranceSelected){
-      return setFragranceSelected('')
-    }
-    setFragranceSelected(fragrance)
+  const handleFragrance = (fragranceId: string) => {
+   setFragranceSelected(fragranceId)
   }
 
   const validateFamilyGroup = (family: FamilyGroup) => {
@@ -139,6 +131,10 @@ setFragrance(fragranceList)
                 <span key={f.id}>{f.name}</span>
               ))
               }
+              <CustomSelect 
+              options={fragrance}
+              onChange={handleFragrance}
+              placeholder="Elige tu fragancia"/>
             </section>
             <hr className="text-gray-300"></hr>
             <section>

@@ -6,10 +6,14 @@ export async function getsupabaseservice (request: NextRequest, from: string, me
     const {searchParams} = request.nextUrl
     console.log(searchParams)
     const family = searchParams.get("family")
+    const fragrance = searchParams.get("fragrance")
     let query = supabaseService.from(from).select("*, fragrance(name, id)")
 
     if(family){
       query = query.eq("family", family);
+    }
+     if(fragrance){
+      query = query.eq("fragrance", fragrance)
     }
     const {data, error} = await query
     if (error) {

@@ -14,6 +14,11 @@ export type Product = {
   deleted: boolean;
 };
 
+export type FragranceForSelect = {
+  value: string;
+  label: string
+}
+
 export type FamilyGroup = {
   id: string;
   name: string;

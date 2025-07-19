@@ -12,7 +12,7 @@ const Header = () => {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center">
           <Link href={"/"}>
-            <h1 className="text-2x1 font-semibold tracking-wider text-primary text-shadow-lg">
+            <h1 className="text-2xl font-semibold tracking-wider text-primary text-shadow-lg">
               SAPHIRUS
             </h1>
           </Link>
