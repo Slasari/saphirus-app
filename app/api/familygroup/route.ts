@@ -1,9 +1,12 @@
 import supabaseService from "@/app/lib/supabasewithouttoken";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET () {
+export async function GET (request: NextRequest) {
     try{
-        const {data, error} = await supabaseService.rpc("get_families_with_product_count")
+        const {searchParams} = request.nextUrl
+        const fragrance = searchParams.get("fragrance") ? searchParams.get("fragrance") : null
+        const usage = searchParams.get("usage")? searchParams.get("usage") : null
+        const {data, error} = await supabaseService.rpc("get_families_with_product_count", {p_fragrance: fragrance, p_usage: usage})
         if(error){
             return NextResponse.json({
                 error, message: 'Error al conseguir el grupo de familia'

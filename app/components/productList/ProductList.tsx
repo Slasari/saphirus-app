@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { URL_PRODUCTS, URL_FAMILY, URL_FRAGRANCE } from "@/app/helpers/variables/variables";
+import { URL_PRODUCTS, URL_FAMILY, URL_FRAGRANCE, URL_USAGE } from "@/app/helpers/variables/variables";
 import ProductCard from "../productCard/ProductCard";
 import { Product, FamilyGroup, Fragrance, FragranceForSelect } from "@/app/helpers/types";
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import Select from "react-select/base";
-import CustomSelect from "./CustomSelect";
+import CustomSelect from "./CustomSelectWrap";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -15,21 +15,23 @@ const ProductList = () => {
   const [familyGroupSelected, setFamilyGroupSelected] = useState("");
   const [fragrance, setFragrance] = useState([]);
   const [fragranceSelected, setFragranceSelected] = useState("");
+  const [usage, setUsage] = useState([]);
+  const [usageSelected, setUsageSelected] = useState("")
 
   useEffect(() => {
-    fetch(`${URL_PRODUCTS}?family=${familyGroupSelected}&fragrance=${fragranceSelected}`, { cache: "no-cache" }).then((r) =>
+    fetch(`${URL_PRODUCTS}?family=${familyGroupSelected}&fragrance=${fragranceSelected}&usage=${usageSelected}`, { cache: "no-cache" }).then((r) =>
       r.json().then((response) => setProducts(response.data))
     );
-  }, [familyGroupSelected, fragranceSelected]);
+  }, [familyGroupSelected, fragranceSelected, usageSelected]);
   
   useEffect(() => {
-    fetch(URL_FAMILY, { cache: "no-cache" }).then((r) =>
+    fetch(`${URL_FAMILY}?fragrance=${fragranceSelected}&usage=${usageSelected}`, { cache: "no-cache" }).then((r) =>
       r.json().then((response) => setFamilyGroup(response.data))
     );
-  }, [])
+  }, [fragranceSelected, usageSelected])
 
   useEffect(() => {
-    fetch(`${URL_FRAGRANCE}?family=${familyGroupSelected}`, { cache: "no-cache" }).then((r) =>
+    fetch(`${URL_FRAGRANCE}?family=${familyGroupSelected}&usage=${usageSelected}`, { cache: "no-cache" }).then((r) =>
       r.json().then((response) => {
         const fragranceList = response.fragranceForSelect.filter(
   (item: FragranceForSelect, index: number, self: FragranceForSelect[]) =>
@@ -42,7 +44,24 @@ const ProductList = () => {
 setFragrance(fragranceList)
       })
     );
-  }, [familyGroupSelected])
+  }, [familyGroupSelected, usageSelected])
+
+  useEffect(() => {
+    fetch(`${URL_USAGE}?family=${familyGroupSelected}&fragrance=${fragranceSelected}`, { cache: "no-cache" }).then((r) =>
+      r.json().then((response) => {
+        const usageList = response.usageForSelect.filter(
+  (item: FragranceForSelect, index: number, self: FragranceForSelect[]) =>
+    index === self.findIndex(
+      (t) =>
+        t.value === item.value &&
+        t.label === item.label
+    )
+);
+setUsage(usageList)
+
+      })
+    );
+  }, [familyGroupSelected, fragranceSelected])
 
   const handleFamily = (family: string) => {
     if(familyGroupSelected){
@@ -53,6 +72,10 @@ setFragrance(fragranceList)
 
   const handleFragrance = (fragranceId: string) => {
    setFragranceSelected(fragranceId)
+  }
+
+  const handleUsage = (usageId: string) => {
+   setUsageSelected(usageId)
   }
 
   const validateFamilyGroup = (family: FamilyGroup) => {
@@ -126,11 +149,6 @@ setFragrance(fragranceList)
               <h2 className="font-semibold text-shadow-sm text-lg">
                 Fragancia
               </h2>
-              {
-                fragrance.map((f: Fragrance) => (
-                <span key={f.id}>{f.name}</span>
-              ))
-              }
               <CustomSelect 
               options={fragrance}
               onChange={handleFragrance}
@@ -141,6 +159,10 @@ setFragrance(fragranceList)
               <h2 className="font-semibold text-shadow-sm text-lg">
                 Sugerencia de uso
               </h2>
+               <CustomSelect 
+              options={usage}
+              onChange={handleUsage}
+              placeholder="Elige tu uso"/>
             </section>
           </div>
         </div>

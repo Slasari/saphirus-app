@@ -1,19 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import supabaseService from "@/app/lib/supabasewithouttoken";
-import { Fragrance } from "@/app/helpers/types";
 
 export async function GET (request: NextRequest) {
   try{
     const {searchParams} = request.nextUrl
     const family = searchParams.get("family")
-    const usage = searchParams.get("usage")
-    let query = supabaseService.from("products").select('fragrance(id, name)')
+    const fragrance = searchParams.get("fragrance")
+    let query = supabaseService.from("products").select('usage(id, name)')
     if(family){
       query = query.eq("family", family
       )
     }
-    if(usage){
-      query = query.eq("usage", usage
+    if(fragrance){
+      query = query.eq("fragrance", fragrance
       )
     }
     const {data, error} = await query
@@ -22,10 +21,10 @@ export async function GET (request: NextRequest) {
       error, message: "error en servidor"
     }, {status: 500})
     }
-    const fragrance = data.map((e) => e.fragrance)
-    const fragranceForSelect = fragrance.map((e: Fragrance) => ({value: e.id, label: e.name}))
+    const usage = data.map((e) => e.usage)
+    const usageForSelect = usage.map((e) => ({value: e.id, label: e.name}))
     return NextResponse.json({
-      data: fragrance, message: "Exito al conseguir las fragancias", fragranceForSelect
+      data: usage, message: "Exito al conseguir los usos", usageForSelect
     }, {status: 200})
   }
   catch(err){
