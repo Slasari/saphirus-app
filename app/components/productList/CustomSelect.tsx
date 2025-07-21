@@ -11,9 +11,10 @@ type CustomSelectProps = {
     options: OptionType[];
     onChange: (value: string) => void;
     placeholder?: string;
+    value: string
 }
 
-export default function CustomSelect({options, onChange, placeholder} : CustomSelectProps){
+export default function CustomSelect({options, onChange, placeholder, value} : CustomSelectProps){
     const handleChange = (selectedOption: SingleValue<OptionType>) => {
         if(selectedOption){
             onChange(selectedOption.value)
@@ -50,9 +51,11 @@ export default function CustomSelect({options, onChange, placeholder} : CustomSe
     },
   }),
 };
+
     return (
         <div>
             <Select 
+            value={options.find(f => f.value === value) || ""}
             styles={customStyles}
             theme={customTheme}
             options={options}

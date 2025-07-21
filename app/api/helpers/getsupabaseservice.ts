@@ -8,11 +8,16 @@ export async function getsupabaseservice (request: NextRequest, from: string, me
     const usage = searchParams.get("usage")? searchParams.get("usage") : null
     const search = searchParams.get("search")? searchParams.get("search") : null
     const family = searchParams.get("family") ? searchParams.get("family") : null
+    const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1
+    const pageItems = searchParams.get("pageItems") ? Number(searchParams.get("pageItems")) : 8
+
     const { data, error } = await supabaseService.rpc("search_products_with_unaccent", {
       p_family: family,
       p_fragrance: fragrance,
       p_usage: usage,
       p_search: search,
+      p_limit: pageItems,
+      p_offset:(page - 1 ) * pageItems
     });
     if (error) {
       return {
@@ -24,6 +29,7 @@ export async function getsupabaseservice (request: NextRequest, from: string, me
     }
     return {
         data,
+        page: page,
         message: `Exito ${message}`,
        status: 200
     }
