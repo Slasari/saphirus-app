@@ -4,10 +4,9 @@ import React from "react";
 import { URL_PRODUCTS, URL_FAMILY, URL_FRAGRANCE, URL_USAGE } from "@/app/helpers/variables/variables";
 import ProductCard from "../productCard/ProductCard";
 import { Product, FamilyGroup, Fragrance, FragranceForSelect } from "@/app/helpers/types";
-import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
-import Select from "react-select/base";
 import CustomSelect from "./CustomSelectWrap";
+import Searchbar from "../Searchbar";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -17,6 +16,7 @@ const ProductList = () => {
   const [fragranceSelected, setFragranceSelected] = useState("");
   const [usage, setUsage] = useState([]);
   const [usageSelected, setUsageSelected] = useState("")
+  const [search, setSearch] = useState("")
 
   useEffect(() => {
     fetch(`${URL_PRODUCTS}?family=${familyGroupSelected}&fragrance=${fragranceSelected}&usage=${usageSelected}`, { cache: "no-cache" }).then((r) =>
@@ -86,25 +86,33 @@ setUsage(usageList)
         return true
     }
   }
-
+  useEffect(() => {
+    const handle = setTimeout(() => {
+      if(search || products.length >= 0){fetch(`${URL_PRODUCTS}?search=${search}`, { cache: "no-cache" }).then((r) =>
+      r.json().then((response) => setProducts(response.data))
+    );
+      fetch(`${URL_FAMILY}?search=${search}`, { cache: "no-cache" }).then((r) =>
+      r.json().then((response) => setFamilyGroup(response.data))
+    );}
+      console.log(search)}, 1000)
+  
+    return () => {
+      clearTimeout(handle)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search])
+  
   return (
     <div
       id="destacados"
-      className="flex flex-wrap flex-col items-center px-6 md:px-12 w-full"
+      className="flex flex-wrap flex-col items-center px-6 md:px-12 w-full relative"
     >
       <h2 className="text-2xl font-bold m-8 text-shadow-sm text-secondary">
         PRODUCTOS
       </h2>
       <div className="w-full flex">
         <div className="w-[20%] shadow-sm p-5 flex flex-col gap-5">
-          <div className="relative w-full max-w-md">
-            <Search className="text-gray-600 absolute right-3 w-5 h-5 top-1/2 transform -translate-y-1/2 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Buscá tus productos"
-              className="w-full border-1 border-gray-300 h-12 rounded-lg focus:outline-none focus:ring-0 p-3 text-gray-600 pr-10"
-            />
-          </div>
+          <Searchbar search={search} setSearch={setSearch} />
           <div className="flex flex-col gap-5">
             <section>
               <h2 className="font-semibold text-shadow-sm text-lg">
@@ -172,6 +180,19 @@ setUsage(usageList)
           ))}
         </div>
       </div>
+      <div className="absolute -bottom-20 left-0 w-full overflow-hidden leading-[0] z-0">
+  <svg
+    className="relative block w-[calc(150%+1.3px)] h-[80px]"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1600 100"
+    preserveAspectRatio="none"
+  >
+    <path
+      d="M321.39,56.44c58.79,0,116-14.22,173.89-21.48,65.63-8.17,132.63-6.15,197.64,1.86,86.21,10.68,172.14,27.18,258.69,26.24,83.33-.91,166.27-20.36,249.6-29.17,73.46-7.66,148-2.91,220.62,7.08,58.44,7.89,116.2,17.69,174.37,24.48V0H0V27.35A600.58,600.58,0,0,1,321.39,56.44Z"
+      fill="white"  // Tailwind blue-50
+    />
+  </svg>
+</div>
     </div>
   );
 };

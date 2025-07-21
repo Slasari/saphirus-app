@@ -4,22 +4,16 @@ import supabaseService from "@/app/lib/supabasewithouttoken";
 export async function getsupabaseservice (request: NextRequest, from: string, message: string) {
     try {
     const {searchParams} = request.nextUrl
-    console.log(searchParams)
-    const family = searchParams.get("family")
-    const fragrance = searchParams.get("fragrance")
-    const usage = searchParams.get("usage")
-    let query = supabaseService.from(from).select("*, fragrance(name, id)")
-
-    if(family){
-      query = query.eq("family", family);
-    }
-     if(fragrance){
-      query = query.eq("fragrance", fragrance)
-    }
-     if(usage){
-      query = query.eq("usage", usage)
-    }
-    const {data, error} = await query
+    const fragrance = searchParams.get("fragrance") ? searchParams.get("fragrance") : null
+    const usage = searchParams.get("usage")? searchParams.get("usage") : null
+    const search = searchParams.get("search")? searchParams.get("search") : null
+    const family = searchParams.get("family") ? searchParams.get("family") : null
+    const { data, error } = await supabaseService.rpc("search_products_with_unaccent", {
+      p_family: family,
+      p_fragrance: fragrance,
+      p_usage: usage,
+      p_search: search,
+    });
     if (error) {
       return {
           error,
@@ -39,6 +33,6 @@ export async function getsupabaseservice (request: NextRequest, from: string, me
         error : err,
         message: "Error de servidor",
         status: 500
-    } 
+    }
   }
 }
