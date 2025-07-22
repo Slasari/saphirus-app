@@ -11,14 +11,15 @@ export async function getsupabaseservice (request: NextRequest, from: string, me
     const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1
     const pageItems = searchParams.get("pageItems") ? Number(searchParams.get("pageItems")) : 8
 
-    const { data, error } = await supabaseService.rpc("search_products_with_unaccent", {
+    const { data, error } = await supabaseService.rpc("search_products_with_unaccent_v2", {
       p_family: family,
       p_fragrance: fragrance,
       p_usage: usage,
       p_search: search,
       p_limit: pageItems,
-      p_offset:(page - 1 ) * pageItems
-    });
+      p_offset:(page - 1 ) * pageItems, 
+    })
+    .select("*")
     if (error) {
       return {
           error,

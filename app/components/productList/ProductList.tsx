@@ -29,11 +29,11 @@ const ProductList = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1)
 
-  useEffect(() => {
+  /* useEffect(() => {
     fetch(
       `${URL_PRODUCTS}?family=${familyGroupSelected}&fragrance=${fragranceSelected}&usage=${usageSelected}&search=${search}&page=${page}`,
       { cache: "no-cache" }
-    ).then((r) => r.json().then((response) => setProducts(response.data)));
+    ).then((r) => r.json().then((response) => console.log(response.data)));
   }, [familyGroupSelected, fragranceSelected, usageSelected, page]);
 
   useEffect(() => {
@@ -126,6 +126,83 @@ const ProductList = () => {
       clearTimeout(handle);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]); */
+
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+    useEffect(()=>{
+    fetch(
+      `${URL_PRODUCTS}?family=${familyGroupSelected}&fragrance=${fragranceSelected}&usage=${usageSelected}&search=${debouncedSearch}&page=${page}`,
+      { cache: "no-cache" }
+    ).then((r) => r.json().then((response) => setProducts(response.data[0].products))); 
+
+    if(!familyGroupSelected){
+         fetch(
+      `${URL_FAMILY}?fragrance=${fragranceSelected}&usage=${usageSelected}&search=${debouncedSearch}`,
+      { cache: "no-cache" }
+    ).then((r) => r.json().then((response) => setFamilyGroup(response.data)))
+    }
+
+    if(!fragranceSelected){
+        fetch(
+      `${URL_FRAGRANCE}?family=${familyGroupSelected}&usage=${usageSelected}&search=${debouncedSearch}`,
+      { cache: "no-cache" }
+    ).then((r) =>
+      r.json().then((response) => {
+        const fragranceList = response.fragranceForSelect.filter(
+          (
+            item: FragranceForSelect,
+            index: number,
+            self: FragranceForSelect[]
+          ) =>
+            index ===
+            self.findIndex(
+              (t) => t.value === item.value && t.label === item.label
+            )
+        );
+        setFragrance(fragranceList);
+      })
+    );
+    }
+
+    if(!usageSelected){
+        fetch(
+      `${URL_USAGE}?family=${familyGroupSelected}&fragrance=${fragranceSelected}&search=${debouncedSearch}`,
+      { cache: "no-cache" }
+    ).then((r) =>
+      r.json().then((response) => {
+        const usageList = response.usageForSelect.filter(
+          (
+            item: FragranceForSelect,
+            index: number,
+            self: FragranceForSelect[]
+          ) =>
+            index ===
+            self.findIndex(
+              (t) => t.value === item.value && t.label === item.label
+            )
+        );
+        setUsage(usageList);
+      })
+    );
+    }
+
+    },[familyGroupSelected, fragranceSelected, usageSelected, page,debouncedSearch])
+
+
+
+  useEffect(() => {
+    const handle = setTimeout(() => {  
+    setDebouncedSearch(search);    
+      setFamilyGroupSelected("")
+      setFragranceSelected("")
+      setUsageSelected("")
+      setPage(1)
+    }, 1000);
+
+    return () => {
+      clearTimeout(handle);
+    };
   }, [search]);
 
   const handleFamily = (family: string) => {
@@ -230,12 +307,16 @@ const ProductList = () => {
             </section>
           </div>
         </div>
-        <div className="w-[80%] flex flex-wrap gap-10 p-10">
-          <button onClick={() => setPage(state => state + 1)}>SIGUIENTE</button>
+        <div className="w-[80%] justify-center flex flex-col gap-5">
+          <div className="flex gap-5  justify-center w-[80%]">
           <button onClick={() => setPage(state => (state > 1 ? state - 1 : state))}>ANTERIOR</button>
+          <button onClick={() => setPage(state => state + 1)}>SIGUIENTE</button>
+          </div>
+        {<div className="w-full flex flex-wrap gap-10 p-10">
           {products.map((p: Product) => (
             <ProductCard key={p.id} />
           ))}
+          </div>}
         </div>
       </div>
       <div className="absolute -bottom-20 left-0 w-full overflow-hidden leading-[0] z-0">
