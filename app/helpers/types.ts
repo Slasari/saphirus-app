@@ -7,6 +7,7 @@ export type Product = {
   net_content: string;
   type: string;
   family: string;
+  family_name: string;
   fragrance: Fragrance;
   usage: string;
   image: string[];

@@ -17,9 +17,10 @@ export async function getsupabaseservice (request: NextRequest, from: string, me
       p_usage: usage,
       p_search: search,
       p_limit: pageItems,
-      p_offset:(page - 1 ) * pageItems, 
+      p_offset:(page - 1 ) * pageItems,
     })
     .select("*")
+    console.log(data, error)
     if (error) {
       return {
           error,

@@ -11,15 +11,16 @@ import ProductCard from "../productCard/ProductCard";
 import {
   Product,
   FamilyGroup,
-  Fragrance,
   FragranceForSelect,
 } from "@/app/helpers/types";
 import { useState, useEffect } from "react";
 import CustomSelect from "./CustomSelectWrap";
 import Searchbar from "../Searchbar";
+import { Button } from "../Button";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0)
   const [familyGroup, setFamilyGroup] = useState([]);
   const [familyGroupSelected, setFamilyGroupSelected] = useState("");
   const [fragrance, setFragrance] = useState([]);
@@ -29,112 +30,13 @@ const ProductList = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1)
 
-  /* useEffect(() => {
-    fetch(
-      `${URL_PRODUCTS}?family=${familyGroupSelected}&fragrance=${fragranceSelected}&usage=${usageSelected}&search=${search}&page=${page}`,
-      { cache: "no-cache" }
-    ).then((r) => r.json().then((response) => console.log(response.data)));
-  }, [familyGroupSelected, fragranceSelected, usageSelected, page]);
-
-  useEffect(() => {
-    fetch(
-      `${URL_FAMILY}?fragrance=${fragranceSelected}&usage=${usageSelected}&search=${search}`,
-      { cache: "no-cache" }
-    ).then((r) => r.json().then((response) => setFamilyGroup(response.data)));
-  }, [fragranceSelected, usageSelected]);
-
-  useEffect(() => {
-    fetch(
-      `${URL_FRAGRANCE}?family=${familyGroupSelected}&usage=${usageSelected}&search=${search}`,
-      { cache: "no-cache" }
-    ).then((r) =>
-      r.json().then((response) => {
-        const fragranceList = response.fragranceForSelect.filter(
-          (
-            item: FragranceForSelect,
-            index: number,
-            self: FragranceForSelect[]
-          ) =>
-            index ===
-            self.findIndex(
-              (t) => t.value === item.value && t.label === item.label
-            )
-        );
-        setFragrance(fragranceList);
-      })
-    );
-  }, [familyGroupSelected, usageSelected]);
-
-  useEffect(() => {
-    fetch(
-      `${URL_USAGE}?family=${familyGroupSelected}&fragrance=${fragranceSelected}&search=${search}`,
-      { cache: "no-cache" }
-    ).then((r) =>
-      r.json().then((response) => {
-        const usageList = response.usageForSelect.filter(
-          (
-            item: FragranceForSelect,
-            index: number,
-            self: FragranceForSelect[]
-          ) =>
-            index ===
-            self.findIndex(
-              (t) => t.value === item.value && t.label === item.label
-            )
-        );
-        setUsage(usageList);
-      })
-    );
-  }, [familyGroupSelected, fragranceSelected]);
-
-  useEffect(() => {
-    const handle = setTimeout(() => {
-      if (search || products.length >= 0) {
-        fetch(`${URL_PRODUCTS}?search=${search}`, { cache: "no-cache" }).then(
-          (r) => r.json().then((response) => setProducts(response.data))
-        );
-        fetch(`${URL_FAMILY}?search=${search}`, { cache: "no-cache" }).then(
-          (r) => r.json().then((response) => setFamilyGroup(response.data))
-        );
-      }
-      fetch(
-      `${URL_FRAGRANCE}?family=${familyGroupSelected}&usage=${usageSelected}&search=${search}`,
-      { cache: "no-cache" }
-    ).then((r) =>
-      r.json().then((response) => {
-        const fragranceList = response.fragranceForSelect.filter(
-          (
-            item: FragranceForSelect,
-            index: number,
-            self: FragranceForSelect[]
-          ) =>
-            index ===
-            self.findIndex(
-              (t) => t.value === item.value && t.label === item.label
-            )
-        );
-        setFragrance(fragranceList);
-      })
-    );
-      setFamilyGroupSelected("")
-      setFragranceSelected("")
-      setUsageSelected("")
-      setPage(1)
-    }, 1000);
-
-    return () => {
-      clearTimeout(handle);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]); */
-
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
     useEffect(()=>{
     fetch(
       `${URL_PRODUCTS}?family=${familyGroupSelected}&fragrance=${fragranceSelected}&usage=${usageSelected}&search=${debouncedSearch}&page=${page}`,
       { cache: "no-cache" }
-    ).then((r) => r.json().then((response) => setProducts(response.data[0].products))); 
+    ).then((r) => r.json().then((response) => {setProducts(response.data[0].products); setTotalProducts(response.data[0].total_count)})); 
 
     if(!familyGroupSelected){
          fetch(
@@ -220,6 +122,19 @@ const ProductList = () => {
     setUsageSelected(usageId);
   };
 
+  const nextPage = () => {
+    if(8 * page < totalProducts){
+      return (<Button variant="secondary" onClick={() =>  setPage(state => state + 1)}>SIGUIENTE</Button>)
+    }
+    return (<Button variant="disabled">SIGUIENTE</Button>)
+  }
+  const prevPage = () => {
+    if(page > 1){
+      return (<Button variant="secondary" onClick={() => setPage(state => state - 1)}>ANTERIOR</Button>)
+    } 
+    return (<Button variant="disabled">ANTERIOR</Button>)
+  }
+
   const validateFamilyGroup = (family: FamilyGroup) => {
     if (family.total_products < 1) {
       return false;
@@ -231,7 +146,7 @@ const ProductList = () => {
 
   return (
     <div
-      id="destacados"
+      id="productos"
       className="flex flex-wrap flex-col items-center px-6 md:px-12 w-full relative"
     >
       <h2 className="text-2xl font-bold m-8 text-shadow-sm text-secondary">
@@ -309,12 +224,14 @@ const ProductList = () => {
         </div>
         <div className="w-[80%] justify-center flex flex-col gap-5">
           <div className="flex gap-5  justify-center w-[80%]">
-          <button onClick={() => setPage(state => (state > 1 ? state - 1 : state))}>ANTERIOR</button>
-          <button onClick={() => setPage(state => state + 1)}>SIGUIENTE</button>
+          {/* <Button variant={prevPage} onClick={() => prevPage()}>ANTERIOR</Button> */}
+          {prevPage()}
+          {nextPage()}
+          {/* <Button variant={nextPage} onClick={() => {nextPage(); console.log("hola")}}>SIGUIENTE</Button> */}
           </div>
         {<div className="w-full flex flex-wrap gap-10 p-10">
           {products.map((p: Product) => (
-            <ProductCard key={p.id} />
+            <ProductCard key={p.id} product={p}  />
           ))}
           </div>}
         </div>

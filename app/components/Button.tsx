@@ -1,7 +1,7 @@
 import React from 'react'
 interface ButtonProps {
   children: React.ReactNode
-  variant?: 'primary' | 'secondary' | 'tertiary'
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'disabled' 
   fullWidth?: boolean
   onClick?: () => void
 }
@@ -18,7 +18,9 @@ export function Button({
     secondary:
       'bg-transparent border border-primary text-primary hover:bg-primaryHover hover:text-white active:bg-primaryHover',
     tertiary: 
-      'bg-primary text-white' 
+      'bg-primary text-white',
+    disabled: 
+      'bg-transparent border border-primary text-primary opacity-50'
   }
   const widthClass = fullWidth ? 'w-full' : ''
   return (
