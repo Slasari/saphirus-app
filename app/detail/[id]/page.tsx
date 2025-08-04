@@ -1,11 +1,19 @@
 import { Button } from '@/app/components/Button'
 import React from 'react'
+import NavDetail from './NavDetail'
+import { URL_RECOMENDED } from '@/app/helpers/variables/variables'
 
-const productDetail = () => {
+const productDetail = async ({params}: {params: {id: string}}) => {
+  const id = params.id
+
+  const recomendedProducts = await fetch(`${URL_RECOMENDED}?product=${id}`, {cache: 'no-store'})
+  const productList = await recomendedProducts.json()
+  console.log(productList)
   return (
     <div className='w-full flex justify-center '>
+      <NavDetail />
         <div className='shadow-2xl'>
-            <img className='w-lg' src={"https://cdn.discordapp.com/attachments/1389938709771714752/1394687722412834937/20250110-aerosol-clean-cotton-saphirus.jpg?ex=6877b7a9&is=68766629&hm=a5296d75f8cf612e9df4a6b5573279497fce76e99754666335fd22aa91410600&"}></img>
+            <img className='w-lg' src={"https://media.discordapp.net/attachments/929789644286091264/1399402617041326201/20250110-aerosol-clean-cotton-saphirus.jpg?ex=688cd33f&is=688b81bf&hm=4bdc0ce01218f01269f5731cdb6a55b7bac8fce06942bcbb62dbd0bd7c4ce451&=&format=webp&width=968&height=968"}></img>
         </div>
         <div className='p-15 flex flex-col gap-5'>
             <h1 className='font-semibold text-4xl text-shadow-sm'>Nombre</h1>
