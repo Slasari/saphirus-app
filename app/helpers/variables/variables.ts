@@ -11,3 +11,9 @@ export const URL_USAGE = URL_API + 'usage'
 export const URL_FEATURED = URL_API + 'productsfeatures'
 
 export const URL_RECOMENDED = URL_API + 'recomendedproducts'
+
+export const URL_ADMIN = URL_API + 'user/admin'
+
+export const URL_LOGIN = URL_API + 'user/login'
+
+export const URL_DETAIL = URL_API + 'detail'
