@@ -1,11 +1,20 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../Button";
 import { MenuIcon,XIcon } from "lucide-react";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    useEffect(() => {
+      const token = localStorage.getItem('user')
+      if(token){
+        setIsAdmin(true)
+      }
+    })
 
   return (
     <header className="w-full bg-white py-4 px-6 md:px-12 fixed top-0 z-50 shadow-sm">
@@ -44,6 +53,9 @@ const Header = () => {
           </a>
         </nav>
         <div className="hidden md:flex items-center space-x-4" >
+         {
+          isAdmin &&
+          <Link href={"/dashboard"}><Button>Admin</Button></Link>}
           <Button>Contacto</Button>
         </div>
         <button className="md:hidden"

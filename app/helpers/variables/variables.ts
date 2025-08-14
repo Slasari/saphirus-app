@@ -17,3 +17,5 @@ export const URL_ADMIN = URL_API + 'user/admin'
 export const URL_LOGIN = URL_API + 'user/login'
 
 export const URL_DETAIL = URL_API + 'detail'
+
+export const URL_UPLOAD_IMAGE = URL_API + '/uploadimage'
