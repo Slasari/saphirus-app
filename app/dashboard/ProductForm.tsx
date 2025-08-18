@@ -50,23 +50,29 @@ export function ProductForm({ product, onSave, onCancel }) {
         body: JSON.stringify({imageBase64: img, fileName})
       });
       const data = await res.json()
-      uploaederURLS.push(data.url)
+      uploaederURLS.push(data.publicData)
+      if(data.publicDAta){
+        setFormData({
+      ...formData,
+      image: data.publicData[0].publicUrl,
+    });
+      }
       console.log(uploaederURLS)
     }
   };
   // Validar el formulario antes de enviar
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) {
+    if (!formData.name) {
       newErrors.name = "El nombre es obligatorio";
     }
-    if (!formData.description.trim()) {
+    if (!formData.description) {
       newErrors.description = "La descripción es obligatoria";
     }
-    if (!formData.price.trim()) {
+    if (!formData.price) {
       newErrors.price = "El precio es obligatorio";
     }
-    if (!formData.image.trim()) {
+    if (!formData.image) {
       newErrors.image = "La URL de la imagen es obligatoria";
     } else if (!formData.image.match(/^https?:\/\/.+\..+/)) {
       newErrors.image = "Introduce una URL de imagen válida";
